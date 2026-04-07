@@ -1,0 +1,77 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <h2 class="mb-4">Criar Fornecedor</h2>
+      <div *ngIf="loading" class="text-center">
+        <div class="spinner-border" role="status">
+          <span class="visually-hidden">Carregando...</span>
+        </div>
+      </div>
+
+      <form [formGroup]="form" *ngIf="!loading">
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Nome</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="name"
+              placeholder="Nome do fornecedor"
+            />
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Email</label>
+            <input
+              type="email"
+              class="form-control"
+              formControlName="email"
+              placeholder="email@exemplo.com"
+            />
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label">CNPJ</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="cnpj"
+              placeholder="00.000.000/0000-00"
+            />
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Telefone</label>
+            <input
+              type="tel"
+              class="form-control"
+              formControlName="phone"
+              placeholder="(11) 99999-9999"
+            />
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12 mb-3">
+            <label class="form-label">Endereço</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="address"
+              placeholder="Endereço completo"
+            />
+          </div>
+        </div>
+
+        <div class="mt-4">
+          <button type="button" class="btn btn-primary me-2" (click)="confirm()">
+            Criar
+          </button>
+          <button type="button" class="btn btn-secondary" (click)="cancel()">
+            Cancelar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

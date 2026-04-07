@@ -1,0 +1,109 @@
+<div class="max-w-4xl mx-auto space-y-6">
+  <div class="flex items-center gap-4">
+    <button routerLink="/products-list" class="btn btn-ghost">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+      </svg>
+      Voltar
+    </button>
+    <h1 class="text-3xl font-bold">Criar Produto</h1>
+  </div>
+
+  <div class="card bg-base-100 shadow-xl">
+    <div class="card-body">
+      <form [formGroup]="form" (ngSubmit)="confirm()">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="form-control">
+            <label class="label">
+              <span class="label-text">Nome</span>
+            </label>
+            <input type="text" placeholder="Nome do produto" class="input input-bordered" formControlName="name">
+          </div>
+
+          <div class="form-control">
+            <label class="label">
+              <span class="label-text">SKU</span>
+            </label>
+            <input type="text" placeholder="SKU" class="input input-bordered" formControlName="sku">
+          </div>
+
+          <div class="form-control">
+            <label class="label">
+              <span class="label-text">Código de Barras</span>
+            </label>
+            <input type="text" placeholder="Código de barras" class="input input-bordered" formControlName="barcode">
+          </div>
+
+          <div class="form-control">
+            <label class="label">
+              <span class="label-text">Categoria</span>
+            </label>
+            <select class="select select-bordered" formControlName="categoryId">
+              <option value="">Selecione uma categoria</option>
+              <option *ngFor="let category of categories" [value]="category.id">
+                {{ category.name }}
+              </option>
+            </select>
+          </div>
+
+          <div class="form-control">
+            <label class="label">
+              <span class="label-text">Preço de Custo</span>
+            </label>
+            <input type="number" placeholder="Preço de custo" class="input input-bordered" formControlName="costPrice" step="0.01">
+          </div>
+
+          <div class="form-control">
+            <label class="label">
+              <span class="label-text">Preço de Venda</span>
+            </label>
+            <input type="number" placeholder="Preço de venda" class="input input-bordered" formControlName="salePrice" step="0.01">
+          </div>
+
+          <div class="form-control">
+            <label class="label">
+              <span class="label-text">Unidades por Caixa</span>
+            </label>
+            <input type="number" placeholder="Unidades por caixa" class="input input-bordered" formControlName="unitsPerBox">
+          </div>
+
+          <div class="form-control">
+            <label class="label">
+              <span class="label-text">Fornecedor</span>
+            </label>
+            <select class="select select-bordered" formControlName="supplierId">
+              <option value="">Selecione um fornecedor</option>
+              <option *ngFor="let supplier of suppliers" [value]="supplier.id">
+                {{ supplier.name }}
+              </option>
+            </select>
+          </div>
+
+          <div class="form-control">
+            <label class="label">
+              <span class="label-text">Quantidade Inicial</span>
+            </label>
+            <input type="number" placeholder="Quantidade inicial" class="input input-bordered" formControlName="initialQuantity">
+          </div>
+
+          <div class="form-control">
+            <label class="label">
+              <span class="label-text">Estoque Mínimo</span>
+            </label>
+            <input type="number" placeholder="Estoque mínimo" class="input input-bordered" formControlName="minStock">
+          </div>
+        </div>
+
+        <div class="card-actions justify-end mt-6">
+          <button type="button" routerLink="/products-list" class="btn btn-ghost">Cancelar</button>
+          <button type="submit" class="btn btn-primary" [disabled]="!form.valid">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+            Criar Produto
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

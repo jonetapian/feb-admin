@@ -1,0 +1,273 @@
+<div class="bg-gray-50 min-h-screen p-6">
+  <div class="max-w-7xl mx-auto space-y-6">
+    <!-- Header -->
+    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+      <h1 class="text-3xl font-bold text-gray-900">Dashboard</h1>
+
+      <!-- Filters -->
+      <div class="flex flex-col sm:flex-row gap-4">
+        <div class="flex gap-2">
+          <input
+            type="date"
+            [(ngModel)]="startDate"
+            class="input input-bordered"
+            placeholder="Data inicial"
+          >
+          <input
+            type="date"
+            [(ngModel)]="endDate"
+            class="input input-bordered"
+            placeholder="Data final"
+          >
+        </div>
+
+        <div class="flex gap-2">
+          <button (click)="setQuickFilter(0)" class="btn btn-outline btn-sm">Hoje</button>
+          <button (click)="setQuickFilter(7)" class="btn btn-outline btn-sm">7 dias</button>
+          <button (click)="setQuickFilter(30)" class="btn btn-outline btn-sm">30 dias</button>
+          <button (click)="loadAllData()" class="btn btn-primary btn-sm">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+            </svg>
+            Atualizar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- KPIs -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="card bg-white shadow-sm">
+        <div class="card-body p-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-sm text-gray-600">Receita Total</p>
+              <p class="text-2xl font-bold text-gray-900" *ngIf="kpis; else kpiLoading">
+                {{ formatCurrency(kpis.totalRevenue) }}
+              </p>
+              <ng-template #kpiLoading>
+                <div class="animate-pulse bg-gray-200 h-8 rounded"></div>
+              </ng-template>
+            </div>
+            <div class="text-green-600">
+              <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+              </svg>
+            </div>
+          </div>
+          <div *ngIf="comparison && comparison.growth.revenueGrowth" class="mt-2">
+            <span [class]="getGrowthColor(comparison.growth.revenueGrowth)">
+              {{ formatPercentage(comparison.growth.revenueGrowth) }}
+            </span>
+            <span class="text-sm text-gray-500 ml-1">vs período anterior</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card bg-white shadow-sm">
+        <div class="card-body p-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-sm text-gray-600">Total de Vendas</p>
+              <p class="text-2xl font-bold text-gray-900" *ngIf="kpis; else kpiLoading">
+                {{ kpis.totalSales }}
+              </p>
+            </div>
+            <div class="text-blue-600">
+              <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+              </svg>
+            </div>
+          </div>
+          <div *ngIf="comparison && comparison.growth.salesGrowth" class="mt-2">
+            <span [class]="getGrowthColor(comparison.growth.salesGrowth)">
+              {{ formatPercentage(comparison.growth.salesGrowth) }}
+            </span>
+            <span class="text-sm text-gray-500 ml-1">vs período anterior</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card bg-white shadow-sm">
+        <div class="card-body p-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-sm text-gray-600">Itens Vendidos</p>
+              <p class="text-2xl font-bold text-gray-900" *ngIf="kpis; else kpiLoading">
+                {{ kpis.totalItemsSold }}
+              </p>
+            </div>
+            <div class="text-purple-600">
+              <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+              </svg>
+            </div>
+          </div>
+          <div *ngIf="comparison && comparison.growth.itemsGrowth" class="mt-2">
+            <span [class]="getGrowthColor(comparison.growth.itemsGrowth)">
+              {{ formatPercentage(comparison.growth.itemsGrowth) }}
+            </span>
+            <span class="text-sm text-gray-500 ml-1">vs período anterior</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card bg-white shadow-sm">
+        <div class="card-body p-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-sm text-gray-600">Ticket Médio</p>
+              <p class="text-2xl font-bold text-gray-900" *ngIf="kpis; else kpiLoading">
+                {{ formatCurrency(kpis.averageTicket) }}
+              </p>
+            </div>
+            <div class="text-indigo-600">
+              <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Charts and Lists -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <!-- Sales Chart -->
+      <div class="card bg-white shadow-sm">
+        <div class="card-body">
+          <h3 class="card-title">Vendas por Período</h3>
+          <div *ngIf="loadingSalesChart" class="flex justify-center py-8">
+            <span class="loading loading-spinner loading-lg"></span>
+          </div>
+          <div *ngIf="!loadingSalesChart && salesByDate.length > 0" class="h-64">
+            <!-- Chart.js canvas - Uncomment after installing ng2-charts and chart.js -->
+            <!-- <canvas baseChart
+                    [data]="salesChartData"
+                    [options]="salesChartOptions"
+                    [type]="'line'">
+            </canvas> -->
+            <div class="flex items-center justify-center h-full bg-gray-100 rounded">
+              <div class="text-center">
+                <svg class="w-12 h-12 mx-auto text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                </svg>
+                <p class="text-gray-500">Gráfico de vendas</p>
+                <p class="text-sm text-gray-400">Instale ng2-charts e chart.js para visualizar</p>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="!loadingSalesChart && salesByDate.length === 0" class="text-center py-8 text-gray-500">
+            Nenhum dado de vendas encontrado para o período selecionado.
+          </div>
+        </div>
+      </div>
+
+      <!-- Top Products -->
+      <div class="card bg-white shadow-sm">
+        <div class="card-body">
+          <h3 class="card-title">Top 5 Produtos</h3>
+          <div *ngIf="loadingTopProducts" class="flex justify-center py-8">
+            <span class="loading loading-spinner loading-lg"></span>
+          </div>
+          <div *ngIf="!loadingTopProducts && topProducts.length > 0" class="h-64">
+            <!-- Chart.js canvas - Uncomment after installing ng2-charts and chart.js -->
+            <!-- <canvas baseChart
+                    [data]="topProductsChartData"
+                    [options]="topProductsChartOptions"
+                    [type]="'doughnut'">
+            </canvas> -->
+            <div class="flex items-center justify-center h-full bg-gray-100 rounded">
+              <div class="text-center">
+                <svg class="w-12 h-12 mx-auto text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"></path>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path>
+                </svg>
+                <p class="text-gray-500">Top Produtos</p>
+                <p class="text-sm text-gray-400">Instale ng2-charts e chart.js para visualizar</p>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="!loadingTopProducts && topProducts.length === 0" class="text-center py-8 text-gray-500">
+            Nenhum produto vendido no período selecionado.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Alerts and Lists -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <!-- Low Stock Alert -->
+      <div class="card bg-white shadow-sm">
+        <div class="card-body">
+          <h3 class="card-title text-red-600">Estoque Baixo</h3>
+          <div *ngIf="loadingLowStock" class="flex justify-center py-4">
+            <span class="loading loading-spinner"></span>
+          </div>
+          <div *ngIf="!loadingLowStock && lowStockProducts.length > 0" class="space-y-2">
+            <div *ngFor="let product of lowStockProducts"
+                 class="flex justify-between items-center p-2 rounded"
+                 [class]="getStatusColor(product.status)">
+              <div>
+                <p class="font-medium">{{ product.productName }}</p>
+                <p class="text-sm">{{ product.currentQuantity }} / {{ product.minStock }}</p>
+              </div>
+              <span class="badge" [class]="product.status === 'CRITICAL' ? 'badge-error' : 'badge-warning'">
+                {{ product.status }}
+              </span>
+            </div>
+          </div>
+          <div *ngIf="!loadingLowStock && lowStockProducts.length === 0" class="text-center py-4 text-gray-500">
+            Nenhum produto com estoque baixo.
+          </div>
+        </div>
+      </div>
+
+      <!-- Slow Products -->
+      <div class="card bg-white shadow-sm">
+        <div class="card-body">
+          <h3 class="card-title text-yellow-600">Produtos sem Venda</h3>
+          <div *ngIf="loadingSlowProducts" class="flex justify-center py-4">
+            <span class="loading loading-spinner"></span>
+          </div>
+          <div *ngIf="!loadingSlowProducts && slowProducts.length > 0" class="space-y-2">
+            <div *ngFor="let product of slowProducts" class="p-2 border rounded">
+              <p class="font-medium">{{ product.productName }}</p>
+              <p class="text-sm text-gray-600">{{ product.sku }}</p>
+              <p class="text-sm font-medium">{{ formatCurrency(product.salePrice) }}</p>
+            </div>
+          </div>
+          <div *ngIf="!loadingSlowProducts && slowProducts.length === 0" class="text-center py-4 text-gray-500">
+            Nenhum produto sem venda encontrado.
+          </div>
+        </div>
+      </div>
+
+      <!-- Top Products List -->
+      <div class="card bg-white shadow-sm">
+        <div class="card-body">
+          <h3 class="card-title text-green-600">Ranking de Produtos</h3>
+          <div *ngIf="loadingTopProducts" class="flex justify-center py-4">
+            <span class="loading loading-spinner"></span>
+          </div>
+          <div *ngIf="!loadingTopProducts && topProducts.length > 0" class="space-y-2">
+            <div *ngFor="let product of topProducts; let i = index"
+                 class="flex justify-between items-center p-2 border rounded">
+              <div class="flex items-center gap-2">
+                <span class="badge badge-primary">{{ i + 1 }}</span>
+                <div>
+                  <p class="font-medium">{{ product.productName }}</p>
+                  <p class="text-sm text-gray-600">{{ product.totalQuantity }} unidades</p>
+                </div>
+              </div>
+              <span class="font-medium">{{ formatCurrency(product.totalRevenue) }}</span>
+            </div>
+          </div>
+          <div *ngIf="!loadingTopProducts && topProducts.length === 0" class="text-center py-4 text-gray-500">
+            Nenhum produto vendido no período.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

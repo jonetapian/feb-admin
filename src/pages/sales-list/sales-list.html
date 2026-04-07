@@ -1,0 +1,67 @@
+<div class="space-y-6">
+  <div class="flex justify-between items-center">
+    <h1 class="text-3xl font-bold">Vendas</h1>
+    <a routerLink="/sales-create" class="btn btn-primary">
+      <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+      </svg>
+      Nova Venda
+    </a>
+  </div>
+
+  <div class="card bg-base-100 shadow-xl">
+    <div class="card-body">
+      <div class="flex gap-2 mb-4">
+        <input
+          type="text"
+          placeholder="Buscar vendas..."
+          class="input input-bordered flex-1"
+          [(ngModel)]="searchTerm"
+          (input)="filterSales()"
+        />
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="table table-zebra">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Data</th>
+              <th>Total</th>
+              <th>Itens</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let sale of filteredSales">
+              <td>{{ sale.id }}</td>
+              <td>{{ sale.createdAt | date:'dd/MM/yyyy HH:mm' }}</td>
+              <td>R$ {{ sale.totalAmount | number:'1.2-2' }}</td>
+              <td>
+                <span class="badge badge-secondary">{{ sale.saleItems.length }} itens</span>
+              </td>
+              <td>
+                <button class="btn btn-sm btn-info" (click)="viewSale(sale)">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                  </svg>
+                  Ver
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div *ngIf="filteredSales.length === 0" class="text-center py-4">
+        <div class="alert">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <span>Nenhuma venda encontrada.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

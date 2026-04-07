@@ -1,0 +1,125 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <h2 class="mb-4">Editar Produto</h2>
+      <div *ngIf="loading" class="text-center">
+        <div class="spinner-border" role="status">
+          <span class="visually-hidden">Carregando...</span>
+        </div>
+      </div>
+
+      <form [formGroup]="form" *ngIf="!loading">
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Nome</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="name"
+              placeholder="Nome do produto"
+            />
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label">SKU</label>
+            <input type="text" class="form-control" formControlName="sku" placeholder="SKU" />
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Código de Barras</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="barcode"
+              placeholder="Código de barras"
+            />
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Categoria</label>
+            <select class="form-select" formControlName="categoryId">
+              <option value="">Selecione uma categoria</option>
+              <option *ngFor="let category of categories" [value]="category.id">
+                {{ category.name }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Preço de Custo</label>
+            <input
+              type="number"
+              class="form-control"
+              formControlName="costPrice"
+              placeholder="Preço de custo"
+              step="0.01"
+            />
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Preço de Venda</label>
+            <input
+              type="number"
+              class="form-control"
+              formControlName="salePrice"
+              placeholder="Preço de venda"
+              step="0.01"
+            />
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Unidades por Caixa</label>
+            <input
+              type="number"
+              class="form-control"
+              formControlName="unitsPerBox"
+              placeholder="Unidades por caixa"
+            />
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Fornecedor</label>
+            <select class="form-select" formControlName="supplierId">
+              <option value="">Selecione um fornecedor</option>
+              <option *ngFor="let supplier of suppliers" [value]="supplier.id">
+                {{ supplier.name }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Quantidade</label>
+            <input
+              type="number"
+              class="form-control"
+              formControlName="initialQuantity"
+              placeholder="Quantidade"
+            />
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Estoque Mínimo</label>
+            <input
+              type="number"
+              class="form-control"
+              formControlName="minStock"
+              placeholder="Estoque mínimo"
+            />
+          </div>
+        </div>
+
+        <div class="mt-4">
+          <button type="button" class="btn btn-primary me-2" (click)="confirm()">
+            Salvar
+          </button>
+          <button type="button" class="btn btn-secondary" (click)="cancel()">
+            Cancelar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

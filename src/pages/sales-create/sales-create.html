@@ -1,0 +1,91 @@
+<div class="max-w-4xl mx-auto space-y-6">
+  <div class="flex items-center gap-4">
+    <button routerLink="/sales-list" class="btn btn-ghost">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+      </svg>
+      Voltar
+    </button>
+    <h1 class="text-3xl font-bold">Nova Venda</h1>
+  </div>
+
+  <div class="card bg-base-100 shadow-xl">
+    <div class="card-body">
+      <form [formGroup]="saleForm" (ngSubmit)="onSubmit()">
+        <div class="mb-4">
+          <h3 class="text-lg font-semibold mb-4">Itens da Venda</h3>
+
+          <div formArrayName="items">
+            <div class="space-y-4" *ngFor="let item of items.controls; let i = index" [formGroupName]="i">
+              <div class="card bg-base-200">
+                <div class="card-body p-4">
+                  <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+                    <div class="form-control">
+                      <label class="label">
+                        <span class="label-text">Produto</span>
+                      </label>
+                      <select class="select select-bordered select-sm" formControlName="productId" required>
+                        <option value="">Selecione um produto</option>
+                        <option *ngFor="let product of products" [value]="product.id">
+                          {{ product.name }} - R$ {{ product.salePrice | number:'1.2-2' }}
+                        </option>
+                      </select>
+                    </div>
+
+                    <div class="form-control">
+                      <label class="label">
+                        <span class="label-text">Quantidade</span>
+                      </label>
+                      <input type="number" class="input input-bordered input-sm" formControlName="quantity" min="1" required>
+                    </div>
+
+                    <div class="form-control">
+                      <label class="label">
+                        <span class="label-text">Total</span>
+                      </label>
+                      <input type="text" class="input input-bordered input-sm" [value]="'R$ ' + (getItemTotal(i) | number:'1.2-2')" readonly>
+                    </div>
+
+                    <div class="flex items-end">
+                      <button type="button" class="btn btn-sm btn-error" (click)="removeItem(i)">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                        </svg>
+                        Remover
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <button type="button" class="btn btn-outline btn-primary mt-4" (click)="addItem()">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
+            Adicionar Item
+          </button>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="flex justify-between items-center">
+          <div class="text-lg font-semibold">
+            Total: R$ {{ getTotalAmount() | number:'1.2-2' }}
+          </div>
+
+          <div class="flex gap-2">
+            <button type="button" routerLink="/sales-list" class="btn btn-ghost">Cancelar</button>
+            <button type="submit" class="btn btn-primary" [disabled]="!saleForm.valid || items.length === 0">
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              Criar Venda
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
