@@ -12,17 +12,12 @@ import {
   ComparisonData
 } from '../../interfaces/product';
 
-// Chart.js imports - Uncomment after installing ng2-charts and chart.js
-// import { Chart, registerables } from 'chart.js';
-// import { BaseChartDirective } from 'ng2-charts';
-
-// Register Chart.js components - Uncomment after installing dependencies
-// Chart.register(...registerables);
+import { NgChartsModule } from 'ng2-charts';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule], // Add BaseChartDirective after installing ng2-charts
+  imports: [CommonModule, FormsModule, RouterModule, NgChartsModule],
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.scss']
 })
@@ -49,62 +44,61 @@ export class DashboardComponent implements OnInit {
   startDate = '';
   endDate = '';
 
-  // Chart data - Uncomment after installing ng2-charts and chart.js
-  // salesChartData: any = {
-  //   labels: [],
-  //   datasets: [{
-  //     label: 'Vendas (R$)',
-  //     data: [],
-  //     borderColor: '#3B82F6',
-  //     backgroundColor: 'rgba(59, 130, 246, 0.1)',
-  //     tension: 0.4
-  //   }]
-  // };
+  salesChartData: any = {
+    labels: [],
+    datasets: [{
+      label: 'Vendas (R$)',
+      data: [],
+      borderColor: '#3B82F6',
+      backgroundColor: 'rgba(59, 130, 246, 0.1)',
+      tension: 0.4
+    }]
+  };
 
-  // salesChartOptions: any = {
-  //   responsive: true,
-  //   plugins: {
-  //     legend: {
-  //       position: 'top',
-  //     },
-  //     title: {
-  //       display: true,
-  //       text: 'Vendas por Período'
-  //     }
-  //   },
-  //   scales: {
-  //     y: {
-  //       beginAtZero: true,
-  //       ticks: {
-  //         callback: (value: any) => 'R$ ' + value.toLocaleString('pt-BR')
-  //       }
-  //     }
-  //   }
-  // };
+  salesChartOptions: any = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top',
+      },
+      title: {
+        display: true,
+        text: 'Vendas por Período'
+      }
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        ticks: {
+          callback: (value: any) => 'R$ ' + value.toLocaleString('pt-BR')
+        }
+      }
+    }
+  };
 
-  // topProductsChartData: any = {
-  //   labels: [],
-  //   datasets: [{
-  //     label: 'Receita (R$)',
-  //     data: [],
-  //     backgroundColor: [
-  //       '#3B82F6',
-  //       '#10B981',
-  //       '#F59E0B',
-  //       '#EF4444',
-  //       '#8B5CF6'
-  //     ]
-  //   }]
-  // };
+  topProductsChartData: any = {
+    labels: [],
+    datasets: [{
+      label: 'Receita (R$)',
+      data: [],
+      backgroundColor: [
+        '#3B82F6',
+        '#10B981',
+        '#F59E0B',
+        '#EF4444',
+        '#8B5CF6'
+      ]
+    }]
+  };
 
-  // topProductsChartOptions: any = {
-  //   responsive: true,
-  //   plugins: {
-  //     legend: {
-  //       position: 'right',
-  //     }
-  //   }
-  // };
+  topProductsChartOptions: any = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'right',
+      }
+    }
+  };
 
   ngOnInit() {
     this.setDefaultDates();
@@ -158,7 +152,7 @@ export class DashboardComponent implements OnInit {
     this.dashboardService.getSalesByDate(this.startDate, this.endDate).subscribe({
       next: (data) => {
         this.salesByDate = data;
-        // this.updateSalesChart(); // Uncomment after installing chart dependencies
+        this.updateSalesChart();
         this.loadingSalesChart = false;
       },
       error: (error) => {
@@ -173,7 +167,7 @@ export class DashboardComponent implements OnInit {
     this.dashboardService.getTopProducts(this.startDate, this.endDate).subscribe({
       next: (data) => {
         this.topProducts = data;
-        // this.updateTopProductsChart(); // Uncomment after installing chart dependencies
+        this.updateTopProductsChart();
         this.loadingTopProducts = false;
       },
       error: (error) => {
@@ -225,18 +219,17 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  // Chart update methods - Uncomment after installing ng2-charts and chart.js
-  // updateSalesChart() {
-  //   this.salesChartData.labels = this.salesByDate.map(item =>
-  //     new Date(item.date).toLocaleDateString('pt-BR')
-  //   );
-  //   this.salesChartData.datasets[0].data = this.salesByDate.map(item => item.total);
-  // }
+  updateSalesChart() {
+    this.salesChartData.labels = this.salesByDate.map(item =>
+      new Date(item.date).toLocaleDateString('pt-BR')
+    );
+    this.salesChartData.datasets[0].data = this.salesByDate.map(item => item.total);
+  }
 
-  // updateTopProductsChart() {
-  //   this.topProductsChartData.labels = this.topProducts.map(product => product.productName);
-  //   this.topProductsChartData.datasets[0].data = this.topProducts.map(product => product.totalRevenue);
-  // }
+  updateTopProductsChart() {
+    this.topProductsChartData.labels = this.topProducts.map(product => product.productName);
+    this.topProductsChartData.datasets[0].data = this.topProducts.map(product => product.totalRevenue);
+  }
 
   formatCurrency(value: number): string {
     return new Intl.NumberFormat('pt-BR', {
